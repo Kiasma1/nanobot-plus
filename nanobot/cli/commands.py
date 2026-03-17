@@ -29,6 +29,7 @@ from rich.table import Table
 from rich.text import Text
 
 from nanobot import __logo__, __version__
+from nanobot.cli.wizard import ConfigLoadError, resolve_config_path, run_wizard
 from nanobot.config.paths import get_workspace_path
 from nanobot.config.schema import Config
 from nanobot.utils.helpers import sync_workspace_templates
@@ -208,6 +209,25 @@ def onboard():
     console.print("     Get one at: https://openrouter.ai/keys")
     console.print("  2. Chat: [cyan]nanobot agent -m \"Hello!\"[/cyan]")
     console.print("\n[dim]Want Telegram/WhatsApp? See: https://github.com/HKUDS/nanobot#-chat-apps[/dim]")
+
+
+@app.command()
+def wizard(
+    config: str | None = typer.Option(None, "--config", "-c", help="Path to config file"),
+):
+    """Run the nanoBot setup wizard."""
+    from nanobot.cli.wizard import ConsoleIO
+
+    io = ConsoleIO()
+    try:
+        run_wizard(resolve_config_path(config), io=io)
+    except ConfigLoadError as exc:
+        console.print(f"[red]{exc}[/red]")
+        raise typer.Exit(2) from exc
+    except KeyboardInterrupt as exc:
+        console.print("")
+        console.print("已中断。没有写入任何修改。" if getattr(io, "language", "zh") == "zh" else "Interrupted. No changes written.")
+        raise typer.Exit(130) from exc
 
 
 
