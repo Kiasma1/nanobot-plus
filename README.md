@@ -212,6 +212,37 @@ nanobot agent
 
 That's it! You have a working AI assistant in 2 minutes.
 
+## 🧭 Setup Wizard
+
+`nanobot wizard` is a nanoBot-plus CLI setup wizard for instance configuration.
+It turns common setup and maintenance work into a draft-first terminal flow instead of requiring direct JSON edits.
+
+What it solves:
+
+- helps new users start from a safe draft instead of hand-editing a full JSON file
+- helps existing users review and update an instance without accidentally overwriting unrelated fields
+- gives existing Telegram users a maintenance flow instead of pushing them through first-time setup again
+- shows a summary before writing, then backs up and atomically saves the confirmed result
+
+Who it is for:
+
+- new users who want a guided first configuration flow
+- existing Telegram users who want to rotate a token, tighten access rules, add Discord / Feishu, or split Telegram into a dedicated instance
+
+Basic commands:
+
+```bash
+nanobot wizard
+nanobot wizard --config <path>
+```
+
+What to expect:
+
+- the wizard reads the current config first and edits an in-memory draft
+- it supports both the default instance and `--config` multi-instance flows
+- it only writes after final confirmation
+- it preserves untouched fields and keeps compatibility normalization patch-oriented
+
 ## 💬 Chat Apps
 
 Connect nanobot to your favorite chat platform.
@@ -1131,6 +1162,8 @@ nanobot gateway --config ~/.nanobot-telegram/config.json --workspace /tmp/nanobo
 | Command | Description |
 |---------|-------------|
 | `nanobot onboard` | Initialize config & workspace |
+| `nanobot wizard` | Guided setup / maintenance wizard for a config instance |
+| `nanobot wizard --config <path>` | Run the wizard against a specific instance config |
 | `nanobot agent -m "..."` | Chat with the agent |
 | `nanobot agent -w <workspace>` | Chat against a specific workspace |
 | `nanobot agent -w <workspace> -c <config>` | Chat against a specific workspace/config |
